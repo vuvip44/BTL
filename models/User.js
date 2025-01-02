@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const bcrypt = require('bcryptjs');
+const Role = require('./Role');
 
 // Định nghĩa model User
 const User = sequelize.define('User', {
@@ -13,7 +13,7 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  username: {
+  email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
@@ -24,8 +24,19 @@ const User = sequelize.define('User', {
   },
   access_token: {
     type: DataTypes.TEXT
+  },
+  roleId:{
+    type: DataTypes.INTEGER,
+    references:{
+      model: Role,
+      key: 'id'
+    }
   }
 });
+
+// Thiết lập quan hệ 1-n
+Role.hasMany(User, { foreignKey: 'roleId' });
+User.belongsTo(Role, { foreignKey: 'roleId' });
 
 // Tạo bảng trong cơ sở dữ liệu nếu chưa tồn tại
 sequelize.sync({ force: false })  // force: true sẽ xóa bảng cũ và tạo lại bảng mới
