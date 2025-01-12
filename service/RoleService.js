@@ -4,10 +4,12 @@ async function createRole(name) {
 }
 
 async function getRoleById(id) {
-  return await Role.findByPk(id);
+  const role = await Role.findByPk(id);
+    return role ? role.id : null;
 }
 
 async function getRoleByName(name) {
-    return await Role.findOne({ where: { name } });
+  const role = await Role.findOne({ where: { name } });
+  return role ? role : null;
 }
-module.exports = { createRole, getRoleById };
+module.exports = { createRole, getRoleById,getRoleByName };

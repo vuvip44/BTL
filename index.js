@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const sequelize = require('./config/db'); // Import sequelize
 const userRouter = require('./router/UserRouter'); // Import UserRouter
 const roleRouter = require('./router/RoleRouter'); // Import RoleRouter
-
+const contextMiddleware = require('./middleware/ContextMiddleware');
 // Load biến môi trường từ file .env
 dotenv.config({ path: './.env' });
 
@@ -14,6 +14,7 @@ const port = process.env.PORT || 3000;
 
 // Middleware để parse JSON
 app.use(express.json());
+app.use(contextMiddleware);
 app.use(cookieParser());
 
 // Kết nối cơ sở dữ liệu MySQL qua Sequelize

@@ -36,7 +36,9 @@ async function createUser(name, email, password) {
 // Xác thực người dùng
 async function authenticateUser(email, password) {
   const user = await getUserByEmail(email);
-
+  if (!user) {
+    throw new Error('Người dùng không tồn tại');
+  }
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {

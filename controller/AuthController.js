@@ -1,5 +1,6 @@
 // controllers/userController.js
 const userService = require('../service/UserService');
+const {RequestContext} = require('../util/RequestContext');
 
 // Đăng ký người dùng
 exports.signup = async (req, res) => {
@@ -23,7 +24,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const { user, tokens } = await userService.authenticateUser(email, password);
-
+    RequestContext.set('user', { id: user.id, email: user.email, role: user.roleId });
     res.status(200).json({ message: 'Đăng nhập thành công!', user, tokens });
   } catch (error) {
     res.status(500).json({ error: error.message });

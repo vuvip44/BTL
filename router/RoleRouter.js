@@ -4,6 +4,6 @@ const roleController=require('../controller/RoleController');
 const authMiddleware = require('../middleware/auth');
 const authorize = require('../middleware/Authorize');
 // Tạo role mới
-router.post('/',authMiddleware,authorize(['ADMIN']), roleController.createRole);
+router.post('/create',authMiddleware,authorize(['ADMIN']), roleController.createRole);
 
 module.exports = router;
