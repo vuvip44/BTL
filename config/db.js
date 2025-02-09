@@ -1,20 +1,16 @@
-const { Sequelize } = require('sequelize');
-const dotenv = require('dotenv');
+const { Sequelize } = require("sequelize");
+require("dotenv").config(); // Load biến môi trường từ .env
 
-// Sử dụng dotenv để load biến môi trường từ file .env
-dotenv.config({ path: './.env' });
-
-// Cấu hình kết nối MySQL bằng Sequelize
 const sequelize = new Sequelize(
-  process.env.DB_NAME,       // Tên cơ sở dữ liệu
-  process.env.DB_USER,       // Tên người dùng
-  process.env.DB_PASSWORD,   // Mật khẩu
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: process.env.DB_HOST, // Máy chủ MySQL
-    dialect: 'mysql',          // Loại cơ sở dữ liệu
-    port: process.env.DB_PORT, // Cổng kết nối
+    host: process.env.DB_HOST,
+    dialect: "mysql",
+    port: process.env.DB_PORT,
+    logging: false
   }
 );
-
 
 module.exports = sequelize;
