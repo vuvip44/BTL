@@ -14,7 +14,7 @@ const Student=sequelize.define("Student",{
         allowNull: false
     },
     classroom:{
-        type: DataTypes.DATE, 
+        type: DataTypes.STRING, 
         allowNull: false
     },
     parentId:{

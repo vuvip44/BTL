@@ -1,39 +1,48 @@
-const sequelize = require('../config/db');
-const User = require('../models/User');
-const Role = require('../models/Role');
-const bcrypt = require('bcryptjs');
-(async () => {
+const sequelize = require("../config/db");
+const Role = require("../models/Role");
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+
+async function seedData() {
   try {
-    // Kiểm tra xem có roles ADMIN và USER chưa
-    const adminRole = await Role.findOne({ where: { name: 'ADMIN' } });
-    const userRole = await Role.findOne({ where: { name: 'USER' } });
+    await sequelize.sync({ force: false }); // Đảm bảo DB được sync
 
-    if (!adminRole || !userRole) {
-      // Nếu không có, tạo lại roles
-      await Role.bulkCreate([
-        { name: 'ADMIN' },
-        { name: 'USER' }
-      ]);
-      console.log('Roles đã được tạo.');
+    // 🔹 Kiểm tra và tạo Roles
+    const roles = ["ADMIN", "USER","TEACHER","STUDENT","PARENT"];
+    for (const roleName of roles) {
+      const roleExists = await Role.findOne({ where: { name: roleName } });
+      if (!roleExists) {
+        await Role.create({ name: roleName });
+        console.log(`Role ${roleName} đã được tạo.`);
+      }
     }
 
-    // Kiểm tra xem đã có user admin chưa
-    const existingAdmin = await User.findOne({ where: { email: 'admin@gmail.com' } });
-    const hashedPassword = await bcrypt.hash('123', 10);
+    // 🔹 Lấy ID của role ADMIN
+    const adminRole = await Role.findOne({ where: { name: "ADMIN" } });
+
+    // 🔹 Kiểm tra & tạo User admin
+    const existingAdmin = await User.findOne({ where: { email: "admin@gmail.com" } });
     if (!existingAdmin) {
-      // Nếu chưa có, tạo user admin
+      const hashedPassword = await bcrypt.hash("123", 10);
       await User.create({
-        name: 'Admin',
-        email: 'admin@gmail.com',
-        password: hashedPassword, // Mật khẩu phải mã hóa trong thực tế
-        roleId: 1, // Role ADMIN
+        fullName: "Admin",
+        email: "admin@gmail.com",
+        username:"admin",
+        password: hashedPassword,
+        roleId: adminRole.id,
       });
-      console.log('User admin đã được tạo.');
+      console.log("User admin đã được tạo.");
     } else {
-      console.log('User admin đã tồn tại.');
+      console.log("User admin đã tồn tại.");
     }
 
+    console.log("Seed dữ liệu hoàn tất!");
+    process.exit(); // Kết thúc chương trình sau khi seed xong
   } catch (error) {
-    console.error('Lỗi:', error);
+    console.error("Lỗi khi seed dữ liệu:", error);
+    process.exit(1); // Thoát chương trình với mã lỗi
   }
-})();
+}
+
+// Gọi hàm seed
+seedData();

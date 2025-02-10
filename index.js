@@ -63,13 +63,16 @@ const Role = require("./models/Role");
 const Student = require("./models/Student");
 const Parent = require("./models/Parent");
 const Teacher = require("./models/Teacher");
+const studentRoutes=require("./router/StudentRouter");
+const parentRoutes=require("./router/ParentRouter");
 
 
 const app = express();
 
 // Middleware
 app.use(bodyParser.json()); // Xử lý JSON request body
-
+app.use("/api/students",studentRoutes);
+app.use("/api/parents",parentRoutes);
 
 sequelize.sync({ force: false }).then(() => {
   console.log("Database synced!");
